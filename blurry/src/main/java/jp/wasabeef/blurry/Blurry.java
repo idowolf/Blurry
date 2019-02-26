@@ -175,6 +175,29 @@ public class Blurry {
       }
     }
   }
+  
+      public void withContext(Context context) {
+      factor.width = bitmap.getWidth();
+      factor.height = bitmap.getHeight();
+
+      if (async) {
+        BlurTask task = new BlurTask(context, bitmap, factor, new BlurTask.Callback() {
+          @Override public void done(BitmapDrawable drawable) {
+            if (listener != null) {
+              listener.onImageReady(drawable);
+            }
+          }
+        });
+        task.execute();
+      } else {
+        Drawable drawable = new BitmapDrawable(context.getResources(),
+            Blur.of(target.getContext(), bitmap, factor));
+          if (listener != null) {
+            listener.onImageReady(drawable);
+          }
+      }
+    }
+  }
 
   public static class ImageComposer {
 
